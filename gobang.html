@@ -1,0 +1,1061 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+<title>gobang</title>
+<meta charset="utf-8">
+<style>
+    body{
+	    overflow:hidden;
+		height:100%;
+	    width:100%;
+	    margin:0px;
+		background:url(images/gobang_bg.jpg) no-repeat;
+	    background-size:100%;
+	}
+</style>
+<script language="javascript" type="text/javascript">
+
+var canvas;
+var context;
+var isWhite = false;
+var step=225;
+var winner='';
+var dotes=new Array(15);
+for(var x=0;x<15;x++){
+    dotes[x]=new Array(15);
+    for(var y=0;y<15;y++){
+	    dotes[x][y]=0;
+	}
+}
+
+function cookie(name, value, options)
+{
+    if (typeof value != 'undefined')
+    {
+        options = options ||{};
+        if (value === null)
+        {
+            value = '';
+            options.expires = - 1;
+        }
+        var expires = '';
+        if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString))
+        {
+            var date;
+            if (typeof options.expires == 'number')
+            {
+                date = new Date();
+                date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
+            }
+            else
+            {
+                date = options.expires;
+            }
+            expires = '; expires=' + date.toUTCString();
+        }
+        var path = options.path ? '; path=' + options.path : '';
+        var domain = options.domain ? '; domain=' + options.domain : '';
+        var secure = options.secure ? '; secure' : '';
+        document.cookie = [name,'=',encodeURIComponent(value),expires,path,domain,secure].join('');
+    }
+    else
+    {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '')
+        {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i ++ )
+            {
+                var cookie = (cookies[i] || "").replace( /^\s+|\s+$/g, "" );
+                if (cookie.substring(0, name.length + 1) == (name + '='))
+                {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+};
+
+
+function show(){
+    startup();
+	loadgame();
+}
+
+function startup(){
+    canvas=document.getElementById("canvas");
+	context = canvas.getContext("2d");
+    
+	context.fillStyle = 'yellow';
+    context.fillRect(0, 0, 480, 480);
+	
+	for (var i = 0; i < 15; i++) {
+        context.fillStyle = 'black';
+		context.beginPath();
+        context.moveTo(30 * i+30, 30);
+        context.lineTo(30 * i+30, 450);
+        context.closePath();
+        context.stroke();
+		context.fillStyle = 'black';
+        context.beginPath();
+        context.moveTo(30, 30 * i+30);
+        context.lineTo(450, 30 * i+30);
+        context.closePath();
+        context.stroke();
+	}
+	
+	var c, d,e,f;
+	for (c = 0; c <= 2; c++)
+	{
+		for (d = 0; d <= 2; d++)
+		{
+			e = 120 * c+120;
+			f = 120 * d+120;
+			context.fillStyle = 'black';
+            context.beginPath();
+            context.arc(e, f, 3, 0, Math.PI * 2, true);
+            context.closePath();
+            context.fill();
+		}
+	}
+}
+
+function loadgame(){
+    var we=cookie("white");
+	console.log("Get WHITE'S Cookie"+we);
+	loadchess("white",we);
+	
+	var bk=cookie("black");
+	console.log("Get BLACK'S Cookie"+bk);
+	loadchess("black",bk);
+	
+	winner=cookie("winner");
+}
+
+function loadchess(color,record){
+	if (record == null) {
+        console.log(color + "棋子没有游戏记录");
+    } else {
+        var a = record.split(";");
+        console.log(color + "第一次分割字符串：" + a)
+        for (var i = 0; i < a.length; i++) {
+            var b = a[i].split(",");
+            console.log("第" + (i + 1) + "个" + color + "棋子坐标：" + parseInt(b[0]) + "," + parseInt(b[1]));
+            chess(color, b[0], b[1]);
+        }
+    }
+}
+
+function chess(color, x, y) {
+    context.fillStyle = color; 
+    context.beginPath();
+    context.arc(x * 30 + 30, y * 30+ 30, 12, 0, Math.PI * 2, true);
+    context.closePath();
+    context.fill();
+    
+	if (color == "white") {
+        console.log("电脑在" + x + "," + y + "画了个白棋");
+        dotes[x][y] = 1;
+    } else {
+        console.log("电脑在" + x + "," + y + "画了个黑棋");
+        dotes[x][y] = 2;
+    }
+    
+	var a = cookie(color);
+    if (a != null) {
+        cookie(color,null);
+        cookie(color, a + ";" + x + "," + y, {expires:30});
+    } else {
+        cookie(color, x + "," + y, {expires:30});
+    }
+}
+
+function play(e) { 
+  var color;
+  var e=e||event;
+  var px = e.clientX -15-300;
+  var py = e.clientY -15-130;
+  var x = parseInt(px / 30);
+  var y = parseInt(py / 30);
+  if (px < 0 || py < 0 || x > 14 || y > 14 || dotes[x][y] != 0) { 
+    return;
+  }
+  doCheck(x, y);
+}
+
+function doCheck(x, y) {
+  if (winner != '' && winner != null) { 
+    alert(winner);
+    return;
+  }
+  if (isWhite) {
+    color = "white";
+  } else {
+    color = "black";
+  }
+  console.log(color + "落子的位置是：" + x + "," + y);
+  drawChess(color, x, y);
+}
+
+function drawChess(color, x, y) { 
+    if (x >= 0 && x < 15 && y >= 0 && y < 15) {
+        if (color == "white") {
+            chess("white", x, y);
+            isWin("white", x, y); 
+            isWhite=false;     
+        } else {
+            chess("black", x, y);
+            isWin("black", x, y); 
+            isWhite=true;
+			AIplay();
+        }
+    }
+	
+    if(--step==0){
+        winner="和局";
+        cookie("winner", winner);
+        alert(winner);
+    }
+}
+
+function isNewGame() {
+    if (confirm("开启一局新游戏？")) {
+      cookie("winner",null);
+      cookie("white",null);
+      cookie("black",null);
+      cookie("isWhite",null);
+      location.reload();
+    }
+}
+
+function isWin(color, p, q) {
+  console.log("判断" + color + "(" + p + "," + q + ")是否胜利");
+  var temp = 2; 
+  if (color == "white") {
+    temp = 1;
+  }
+  console.log("temp=" + temp);
+  
+	            if (p <= 3 && q <= 3)
+				{
+				    gobang_right(temp,p, q);
+					gobang_downright(temp,p, q);
+					gobang_down(temp,p, q);	
+    			}
+				else if (p >= 4 && p <= 10 && q <= 3)
+				{
+					gobang_right(temp,p, q);
+					gobang_downright(temp,p, q);
+					gobang_down(temp,p, q);
+					gobang_downleft(temp,p, q);
+					gobang_left(temp,p, q);
+				}
+				else if (p >= 11 && q <= 3)
+				{
+					gobang_down(temp,p, q);
+					gobang_downleft(temp,p, q);
+					gobang_left(temp,p, q);
+				}
+				else if (p >= 11 && q >= 4 && q <= 10)
+				{
+					gobang_down(temp,p, q);
+					gobang_downleft(temp,p, q);
+					gobang_left(temp,p, q);
+					gobang_upleft(temp,p, q);
+					gobang_up(temp,p, q);
+				}
+				else if (p >= 11 && q >= 11)
+				{
+					gobang_left(temp,p, q);
+					gobang_upleft(temp,p, q);
+					gobang_up(temp,p, q);
+				}
+				else if (p >= 4 && p <= 10 && q >= 11)
+				{
+					gobang_left(temp,p, q);
+					gobang_upleft(temp,p, q);
+					gobang_up(temp,p, q);
+					gobang_upright(temp,p, q);
+					gobang_right(temp,p, q);
+				}
+				else if (p <= 3 && q >= 11)
+				{
+					gobang_up(temp,p, q);
+					gobang_upright(temp,p, q);
+					gobang_right(temp,p, q);
+				}
+				else if (p <= 3 && q >= 4 && q <= 10)
+				{
+					gobang_up(temp,p, q);
+					gobang_upright(temp,p, q);
+					gobang_right(temp,p, q);
+					gobang_downright(temp,p, q);
+					gobang_down(temp,p, q);
+				}
+				else if (p >= 4 && p <= 10 && q >= 4 && q <= 10)
+				{
+					gobang_up(temp,p, q);
+					gobang_upright(temp,p, q);
+					gobang_right(temp,p, q);
+					gobang_downright(temp,p, q);
+					gobang_down(temp,p, q);
+					gobang_downleft(temp,p, q);
+					gobang_left(temp,p, q);
+					gobang_upleft(temp,p, q);
+				}
+}
+
+function gobang_up(temp,p,q)
+{
+	var r1 = dotes[p][q];
+	var r2 = dotes[p][q - 1];
+	var r3 = dotes[p][q - 2];
+	var r4 = dotes[p][q - 3];
+	var r5 = dotes[p][q - 4];
+	if (r1 == r2)
+	{
+		if (r2 == r3)
+		{
+			if (r3 == r4)
+			{
+				if (r4 == r5)
+				{
+					success(p,q,p,q-4,temp);
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+function gobang_upright(temp,p,q)
+{
+	var r1 = dotes[p][q];
+	var r2 = dotes[p+1][q - 1];
+	var r3 = dotes[p+2][q - 2];
+	var r4 = dotes[p+3][q - 3];
+	var r5 = dotes[p+4][q - 4];
+	if (r1 == r2)
+	{
+		if (r2 == r3)
+		{
+			if (r3 == r4)
+			{
+				if (r4 == r5)
+				{
+					success(p,q,p+4,q-4,temp);
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+function gobang_right(temp,p,q)
+{
+	var r1 = dotes[p][q];
+	var r2 = dotes[p + 1][q];
+	var r3 = dotes[p + 2][q];
+	var r4 = dotes[p + 3][q];
+	var r5 = dotes[p + 4][q];
+	if (r1 == r2)
+	{
+		if (r2 == r3)
+		{
+			if (r3 == r4)
+			{
+				if (r4 == r5)
+				{
+					success(p,q,p+4,q,temp);
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+function gobang_downright(temp,p,q)
+{
+	var r1 = dotes[p][q];
+	var r2 = dotes[p + 1][q + 1];
+	var r3 = dotes[p + 2][q + 2];
+	var r4 = dotes[p + 3][q + 3];
+	var r5 = dotes[p + 4][q + 4];
+	if (r1 == r2)
+	{
+		if (r2 == r3)
+		{
+			if (r3 == r4)
+			{
+				if (r4 == r5)
+				{
+					success(p,q,p+4,q+4,temp);
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+function gobang_down(temp,p,q)
+{
+	var r1 = dotes[p][q];
+	var r2 = dotes[p][q + 1];
+	var r3 = dotes[p][q + 2];
+	var r4 = dotes[p][q + 3];
+	var r5 = dotes[p][q + 4];
+	if (r1 == r2)
+	{
+		if (r2 == r3)
+		{
+			if (r3 == r4)
+			{
+				if (r4 == r5)
+				{
+					success(p,q,p,q+4,temp);
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+function gobang_downleft(temp,p,q)
+{
+	var r1 = dotes[p][q];
+	var r2 = dotes[p - 1][q + 1];
+	var r3 = dotes[p - 2][q + 2];
+	var r4 = dotes[p - 3][q + 3];
+	var r5 = dotes[p - 4][q + 4];
+	if (r1 == r2)
+	{
+		if (r2 == r3)
+		{
+			if (r3 == r4)
+			{
+				if (r4 == r5)
+				{
+					success(p,q,p-4,q+4,temp);
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+function gobang_left(temp,p,q)
+{
+	var r1 = dotes[p][q];
+	var r2 = dotes[p - 1][q];
+	var r3 = dotes[p - 2][q];
+	var r4 = dotes[p - 3][q];
+	var r5 = dotes[p - 4][q];
+	if (r1 == r2)
+	{
+		if (r2 == r3)
+		{
+			if (r3 == r4)
+			{
+				if (r4 == r5)
+				{
+					success(p,q,p-4,q,temp);
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+function gobang_upleft(temp,p,q)
+{
+	var r1 = dotes[p][q];
+	var r2 = dotes[p - 1][q - 1];
+	var r3 = dotes[p - 2][q - 2];
+	var r4 = dotes[p - 3][q - 3];
+	var r5 = dotes[p - 4][q - 4];
+	if (r1 == r2)
+	{
+		if (r2 == r3)
+		{
+			if (r3 == r4)
+			{
+				if (r4 == r5)
+				{
+					success(p,q,p-4,q-4,temp);
+				}
+				else
+				{
+					return;
+				}
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+
+function success(a, b, c, d, temp) {
+    console.log("此局游戏结束啦");
+    console.log("(" + a + "," + b + ")" + "到" + "(" + c + "," + d + ")");
+
+    context.beginPath();
+    context.lineWidth = 5;
+    context.strokeStyle = 'green';
+    context.moveTo(30 * a + 30, 30 * b + 30);
+    context.lineTo(30 * c + 30, 30* d + 30);
+    context.closePath();
+    context.stroke();
+
+
+    winner = "黑棋胜利!";
+    if (temp == 1) {
+        winner = "白棋胜利!";
+    }
+    cookie("winner", winner);
+    alert(winner);
+}
+
+function getPosition() {
+	var a = new Array(2);
+	var score = 0;
+	for (var x = 0; x < 15; x++) {
+		for (var y = 0; y < 15; y++) {
+			if (dotes[x][y] == 0) {
+				if (judge(x, y) > score) {
+					score = judge(x, y);
+					a[0] = x;
+					a[1] = y;
+				}
+			}
+		}
+	}
+	return a;
+}
+
+function AIplay() {
+	var str = getPosition();
+	// console.log("智能AI将在下面坐标下棋：" + str[0] + "," + str[1]);
+	doCheck(str[0], str[1]);
+}
+
+function judge(x, y) {
+	var a = parseInt(leftRight(x, y, 1)) + parseInt(topBottom(x, y, 1)) + parseInt(rightBottom(x, y, 1)) + parseInt(rightTop(x, y, 1))+100; //判断白棋走该位置的得分
+	var b = parseInt(leftRight(x, y, 2)) + parseInt(topBottom(x, y, 2)) + parseInt(rightBottom(x, y, 2)) + parseInt(rightTop(x, y, 2)); //判断黑棋走该位置的得分
+	var result = a + b;
+	// console.log("我计算出了" + x + "," + y + "这个位置的得分为" + result);
+	return result; //返回黑白棋下该位置的总和
+}
+
+function leftRight(x, y, num) {
+	var death = 0; //0表示两边都没堵住,且可以成5，1表示一边堵住了，可以成5,2表示是死棋，不予考虑
+	var live = 0;
+	var count = 0;
+	var arr = new Array(15);
+	for (var i = 0; i< 15; i++) {
+		arr[i] = new Array(15);
+		for (var j = 0; j < 15; j++) {
+			arr[i][j] = dotes[i][j];
+		}
+	}
+	arr[x][y] = num;
+	for (var i = x; i >= 0; i--) {
+		if (arr[i][y] == num) {
+			count++;
+		} else if (arr[i][y] == 0) {
+			live += 1; //空位标记
+			i = -1;
+		} else {
+			death += 1; //颜色不同是标记一边被堵住
+			i = -1;
+		}
+	}
+	for (var i = x; i <= 14; i++) {
+		if (arr[i][y] == num) {
+			count++;
+		} else if (arr[i][y] == 0) {
+			live += 1; //空位标记
+			i = 100;
+		} else {
+			death += 1;
+			i = 100;
+		}
+	}
+	count -= 1;
+	// console.log(x + "," + y + "位置上的左右得分为" + model(count, death));
+	return model(count, death);
+}
+
+function topBottom(x, y, num) {
+	var death = 0; //0表示两边都没堵住,且可以成5，1表示一边堵住了，可以成5,2表示是死棋，不予考虑
+	var live = 0;
+	var count = 0;
+	var arr = new Array(15);
+	for (var i = 0; i< 15; i++) {
+		arr[i] = new Array(15);
+		for (var j = 0; j < 15; j++) {
+			arr[i][j] = dotes[i][j];
+		}
+	}
+	arr[x][y] = num;
+	for (var i = y; i >= 0; i--) {
+		if (arr[x][i] == num) {
+			count++;
+		} else if (arr[x][i] == 0) {
+			live += 1; //空位标记
+			i = -1;
+		} else {
+			death += 1;
+			i = -1;
+		}
+	}
+	for (var i = y; i <= 14; i++) {
+		if (arr[x][i] == num) {
+			count++;
+		} else if (arr[x][i] == 0) {
+			live += 1; //空位标记
+			i = 100;
+		} else {
+			death += 1;
+			i = 100;
+		}
+	}
+	count -= 1;
+	// console.log(x + "," + y + "位置上的上下斜得分为" + model(count, death));
+	return model(count, death);
+}
+
+function rightBottom(x, y, num) {
+	var death = 0; //0表示两边都没堵住,且可以成5，1表示一边堵住了，可以成5,2表示是死棋，不予考虑
+	var live = 0;
+	var count = 0;
+	var arr = new Array(15);
+	for (var i = 0; i< 15; i++) {
+		arr[i] = new Array(15);
+		for (var j = 0; j < 15; j++) {
+			arr[i][j] = dotes[i][j];
+		}
+	}
+	arr[x][y] = num;
+	for (var i = x, j = y; i >= 0 && j >= 0;) {
+		if (arr[i][j] == num) {
+			count++;
+		} else if (arr[i][j] == 0) {
+			live += 1; //空位标记
+			i = -1;
+		} else {
+			death += 1;
+			i = -1;
+		}
+		i--;
+		j--;
+	}
+	for (var i = x, j = y; i <= 14 && j <= 14;) {
+		if (arr[i][j] == num) {
+			count++;
+		} else if (arr[i][j] == 0) {
+			live += 1; //空位标记
+			i = 100;
+		} else {
+			death += 1;
+			i = 100;
+		}
+		i++;
+		j++;
+	}
+	count -= 1;
+	// console.log(x + "," + y + "位置上的右下斜得分为" + model(count, death));
+	return model(count, death);
+}
+
+function rightTop(x, y, num) {
+	var death = 0; //0表示两边都没堵住,且可以成5，1表示一边堵住了，可以成5,2表示是死棋，不予考虑
+	var live = 0;
+	var count = 0;
+	var arr = new Array(15);
+	for (var i = 0; i< 15; i++) {
+		arr[i] = new Array(15);
+		for (var j = 0; j < 15; j++) {
+			arr[i][j] = dotes[i][j];
+		}
+	}
+	arr[x][y] = num;
+	for (var i = x, j = y; i >= 0 && j <= 14;) {
+		if (arr[i][j] == num) {
+			count++;
+		} else if (arr[i][j] == 0) {
+			live += 1; //空位标记
+			i = -1;
+		} else {
+			death += 1;
+			i = -1;
+		}
+		i--;
+		j++;
+	}
+	for (var i = x, j = y; i <= 14 && j >= 0;) {
+		if (arr[i][j] == num) {
+			count++;
+		} else if (arr[i][j] == 0) {
+			live += 1; //空位标记
+			i = 100;
+		} else {
+			death += 1;
+			i = 100;
+		}
+		i++;
+		j--;
+	}
+	count -= 1;
+	// console.log(x + "," + y + "位置上的右上斜得分为" + model(count, death));
+	return model(count, death);
+}
+
+function model(count, death) {
+	// console.log("count" + count + "death" + death);
+	var LEVEL_ONE = 0;//单子
+	var LEVEL_TWO = 1;//眠2，眠1
+	var LEVEL_THREE = 1500;//眠3，活2
+	var LEVEL_FOER = 4000;//冲4，活3
+	var LEVEL_FIVE = 10000;//活4
+	var LEVEL_SIX = 100000;//成5
+	if (count == 1 && death == 1) {
+		return LEVEL_TWO; //眠1
+	} else if (count == 2) {
+		if (death == 0) {
+			return LEVEL_THREE; //活2
+		} else if (death == 1) {
+			return LEVEL_TWO; //眠2
+		} else {
+			return LEVEL_ONE; //死棋
+		}
+	} else if (count == 3) {
+		if (death == 0) {
+			return LEVEL_FOER; //活3
+		} else if (death == 1) {
+			return LEVEL_THREE; //眠3
+		} else {
+			return LEVEL_ONE; //死棋
+		}
+	} else if (count == 4) {
+		if (death == 0) {
+			return LEVEL_FIVE; //活4
+		} else if (death == 1) {
+			return LEVEL_FOER; //冲4
+		} else {
+			return LEVEL_ONE; //死棋
+		}
+	} else if (count == 5) {
+		return LEVEL_SIX; //成5
+	}
+	return LEVEL_ONE;
+}
+
+</script>
+</head>
+<body onload="show()" style="padding:0px;margin:0px">
+<audio autoplay="autoplay" height="100" width="100" loop="true">
+       <source src="images/gobang_bg.mp3" type="audio/mp3" />
+   </audio>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height:100px;">
+    <a class="navbar-brand" href="index.html"><img src="images/index_logo.jpg" style="width:150px;height:70px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="introduce.html">剧情简介<span class="sr-only">(current)</span></a>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          角色介绍
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="character.html"><img src="images/帕西瓦尔.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;帕西瓦尔</a>
+          <a class="dropdown-item" href="character.html"><img src="images/阿尔忒密斯.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;阿尔忒密斯</a>
+          <a class="dropdown-item" href="character.html"><img src="images/艾奇.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;艾奇</a>
+          <a class="dropdown-item" href="character.html"><img src="images/大东.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;大东</a>
+          <a class="dropdown-item" href="character.html"><img src="images/修.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;修</a>
+          <a class="dropdown-item" href="character.html"><img src="images/阿诺克.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;阿诺克</a>
+		  <a class="dropdown-item" href="character.html"><img src="images/索伦托.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;索伦托</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          阿诺克的三把钥匙
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#"><img src="images/古铜之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;古铜之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          <a class="dropdown-item" href="#"><img src="images/翡翠之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;翡翠之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+		  <a class="dropdown-item" href="#"><img src="images/水晶之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;水晶之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="discussing.html">讨论区</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          小游戏
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="game.html">超级玛丽</a>
+		  <a class="dropdown-item" href="gobang.html">Gobang</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          纪念品商店
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="shopping.html">Fassial的小店</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">敬请期待</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+	<ul class="navbar-nav mr-auto" id="fassial">
+	  <li class="nav-item dropdown" v-if="show_one">
+        <a class="nav-link" href="#" @click="Log_In">Log In</a>
+      </li>
+	  <li class="nav-item dropdown" v-if="show_two">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/react.png" width="40px" height="40px" style="border-radius:100%;margin-right:15px;">{{z}}</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#" @click="Log_Out">Log Out</a>
+		  <a class="dropdown-item" href="#" @click="ReLog_In">ReLog In</a>
+        </div>
+      </li>
+	</ul>
+  </div>
+</nav>
+
+	<script src="http://unpkg.com/vue/dist/vue.min.js"></script>
+		<script>			
+			var x,y,z;
+			if(!cookie("NAME")){
+			    x=true;
+				y=false;
+			} else {
+			    x=false;
+				y=true;
+				z=cookie("NAME");
+			}
+			
+			var fassial=new Vue({
+			    el:'#fassial',
+				data:{
+				    show_one:x,
+					show_two:y,
+					name:z,
+				},
+				methods:{
+				    Log_In:function(){
+					    if(!cookie("NAME")){
+						    var _name=prompt("请输入你的名字：");
+							cookie("NAME",_name,{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+					ReLog_In:function(){
+					    if(cookie("NAME")){
+						    var _name=prompt("请输入你的新名字：");
+							cookie("NAME",null);
+							cookie("NAME",_name,{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+					Log_Out:function(){
+					    if(cookie("NAME")){
+							cookie("NAME",null);
+							cookie("NAME","",{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+				}
+			})
+		</script>
+    
+    <canvas width="1024" id="canvas" onmousedown="play(event)" height="768" style="position:absolute;left:300px;top:130px;">
+    </canvas>
+	<button type="button" class="btn btn-outline-warning" style="position:absolute;left:900px;top:170px;width:300px;" onclick="isNewGame()">Restart</button>
+	
+	
+	<div class="card" style="position:absolute;width:300px;left:900px;top:220px;">
+        <h5 class="card-header">Gobang&nbsp;&nbsp;&nbsp; --Fassial操作说明</h5>
+        <div class="card-body">
+    <table class="table table-striped">
+        <thead>
+            <tr class="table-warning">
+                <th scope="col" style="text-align:center;vertical-align:middle;">#</th>
+                <th scope="col" style="text-align:center;vertical-align:middle;">键位</th>
+                <th scope="col" style="text-align:center;vertical-align:middle;">键位说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-warning">
+                <th scope="row" style="text-align:center;vertical-align:middle;">1</th>
+                <td style="text-align:center;vertical-align:middle;">鼠标</td>
+                <td style="text-align:center;vertical-align:middle;">在交叉点处的30px*30px小格内点击即视为下子</td>
+            </tr>
+            <tr class="table-warning">
+                <th scope="row" style="text-align:center;vertical-align:middle;">2</th>
+                <td style="text-align:center;vertical-align:middle;">Restart</td>
+                <td style="text-align:center;vertical-align:middle;">将重置你的棋盘，恢复startup情况</td>
+            </tr>
+         </tbody>
+    </table>
+        </div>
+    </div>
+	
+	
+	 <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

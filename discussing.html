@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	 <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+	
+    <title>讨论区</title>
+	<link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.bootcss.com/vue/2.1.6/vue.min.js"></script>
+	<style>
+	body{
+   	    background:url(images/discussing_bg.png) no-repeat;
+	    background-size:100%;
+	    width:100%;
+	    margin:0px;
+		font-family: Helvetica, Arial, sans-serif;
+	    }
+</style>
+	<script>
+function cookie(name, value, options)
+{
+    if (typeof value != 'undefined')
+    {
+        options = options ||{};
+        if (value === null)
+        {
+            value = '';
+            options.expires = - 1;
+        }
+        var expires = '';
+        if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString))
+        {
+            var date;
+            if (typeof options.expires == 'number')
+            {
+                date = new Date();
+                date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
+            }
+            else
+            {
+                date = options.expires;
+            }
+            expires = '; expires=' + date.toUTCString();
+        }
+        var path = options.path ? '; path=' + options.path : '';
+        var domain = options.domain ? '; domain=' + options.domain : '';
+        var secure = options.secure ? '; secure' : '';
+        document.cookie = [name,'=',encodeURIComponent(value),expires,path,domain,secure].join('');
+    }
+    else
+    {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '')
+        {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i ++ )
+            {
+                var cookie = (cookies[i] || "").replace( /^\s+|\s+$/g, "" );
+                if (cookie.substring(0, name.length + 1) == (name + '='))
+                {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+};
+    </script>
+</head>
+<body class="blogArticle" >	
+<audio autoplay="autoplay" height="100" width="100" loop="true">
+       <source src="images/discussing_bg.mp3" type="audio/mp3" />
+   </audio>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height:105px;">
+    <a class="navbar-brand" href="index.html"><img src="images/index_logo.jpg" style="width:150px;height:70px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="introduce.html">剧情简介<span class="sr-only">(current)</span></a>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          角色介绍
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="character.html"><img src="images/帕西瓦尔.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;帕西瓦尔</a>
+          <a class="dropdown-item" href="character.html"><img src="images/阿尔忒密斯.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;阿尔忒密斯</a>
+          <a class="dropdown-item" href="character.html"><img src="images/艾奇.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;艾奇</a>
+          <a class="dropdown-item" href="character.html"><img src="images/大东.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;大东</a>
+          <a class="dropdown-item" href="character.html"><img src="images/修.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;修</a>
+          <a class="dropdown-item" href="character.html"><img src="images/阿诺克.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;阿诺克</a>
+		  <a class="dropdown-item" href="character.html"><img src="images/索伦托.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;索伦托</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          阿诺克的三把钥匙
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#"><img src="images/古铜之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;古铜之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          <a class="dropdown-item" href="#"><img src="images/翡翠之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;翡翠之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+		  <a class="dropdown-item" href="#"><img src="images/水晶之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;水晶之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="discussing.html">讨论区</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          小游戏
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="game.html">超级玛丽</a>
+		  <a class="dropdown-item" href="gobang.html">Gobang</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          纪念品商店
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="shopping.html">Fassial的小店</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">敬请期待</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+	<ul class="navbar-nav mr-auto" id="fassial">
+	  <li class="nav-item dropdown" v-if="show_one">
+        <a class="nav-link" href="#" @click="Log_In">Log In</a>
+      </li>
+	  <li class="nav-item dropdown" v-if="show_two">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/react.png" width="40px" height="40px" style="border-radius:100%;margin-right:15px;">{{z}}</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#" @click="Log_Out">Log Out</a>
+		  <a class="dropdown-item" href="#" @click="ReLog_In">ReLog In</a>
+        </div>
+      </li>
+	</ul>
+  </div>
+</nav>
+
+	<script src="http://unpkg.com/vue/dist/vue.min.js"></script>
+		<script>			
+			var x,y,z;
+			if(!cookie("NAME")){
+			    x=true;
+				y=false;
+			} else {
+			    x=false;
+				y=true;
+				z=cookie("NAME");
+			}
+			
+			var fassial=new Vue({
+			    el:'#fassial',
+				data:{
+				    show_one:x,
+					show_two:y,
+					name:z,
+				},
+				methods:{
+				    Log_In:function(){
+					    if(!cookie("NAME")){
+						    var _name=prompt("请输入你的名字：");
+							cookie("NAME",_name,{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+					ReLog_In:function(){
+					    if(cookie("NAME")){
+						    var _name=prompt("请输入你的新名字：");
+							cookie("NAME",null);
+							cookie("NAME",_name,{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+					Log_Out:function(){
+					    if(cookie("NAME")){
+							cookie("NAME",null);
+							cookie("NAME","",{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+				}
+			})
+		</script>
+    
+  <div style="position:relative;width:300px;left:100px; top:100px;opacity:0.9;">
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="images/fassial.jpg" alt="Fassial">
+        <div class="card-body">
+            <h5 class="card-title" style="text-align:center;vertical-align:middle;">Fassial</h5>
+            <p class="card-text" style="text-align:center;vertical-align:middle;">计院扫地僧</p>
+            <div style="text-align:center;vertical-align:middle;">
+			    <a href="tencent://message/?uin=2508440340&amp;Site=http://vps.shuidazhe.com&amp;Menu=yes" class="btn btn-primary">联系他</a>
+			</div>
+        </div>
+    </div>
+	<div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+        <div class="card-header" style="color:black;font-size:20px;">相关文章搜索</div>
+        <div class="card-body text-center">
+            <input type="text" class="form-control" aria-label="Text input with segmented dropdown button" placeholder="快来看看楼主还发表过哪些文章吧……">
+            <p class="card-text" style="font-size:18px;margin-top:15px;">原创：174篇</p>
+			<p class="card-text" style="font-size:18px;">转载：17篇</p>
+        </div>
+    </div>
+	<div class="card" style="width: 18rem;">
+        <div class="card-header">
+            作者相关文章推荐
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">《王者荣耀中的历史人物解读》</li>
+            <li class="list-group-item">《三国杀国战中的社会学》</li>
+            <li class="list-group-item">《大学思修参考答案》<span class="badge badge-secondary">New</span></li>
+        </ul>
+    </div>
+  </div>
+	
+  <div style="position:absolute;width:700px;left:500px;top:200px;opacity:0.9;" id="comment">
+    <div class="card">
+        <div class="card-header">
+            <article-content v-bind:article="article"></article-content>
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                 <commemt-content v-bind:comment="comment" v-on:change="changCommmer"></commemt-content>
+            </blockquote>
+        </div>
+		<div class="card-header">
+            <comment-textarea v-bind:type="type" v-bind:name="oldComment" v-on:submit="addComment" v-on:canel="canelCommit"></comment-textarea>
+        </div>
+    </div>
+  </div>
+  
+	<script src="http://unpkg.com/vue/dist/vue.min.js"></script>
+	<script>
+	Vue.component('article-content',{
+	template:'\
+	<div>\
+		<div class="titleBox">\
+			<h1>{{article.title}}</h1>\
+			<p style="text-align:center;"><i class="glyphicon glyphicon-time"></i><span>{{article.time}}</span><i class="glyphicon glyphicon-eye-open"></i><span style="margin-left:30px;">阅读量：{{article.read}}</span></p>\
+		</div>\
+		<div class="articleText" v-html="article.content"></div>\
+	</div>',
+	props: ['article']
+});
+
+Vue.component('commemt-content',{
+	template:'\
+	<div class="commentBox">\
+		<h3>评论</h3>\
+		<p v-if="comment.length==0">暂无评论，我来发表第一篇评论！</p>\
+		<div v-else>\
+			<div class="comment" v-for="(item,index) in comment" v-bind:index="index" >\
+				<b>{{item.name}}<span style="margin-left:20px;font-size:15px;color:grey"><cite>—{{item.time}}</cite></span></b>\
+				<p @click="changeCommenter(item.name,index)">{{item.content}}</p>\
+				<div v-if="item.reply.length > 0">\
+					<div class="reply" style="position:relative;left:50px;" v-for="reply in item.reply">\
+						<b>{{reply.responder}}&nbsp;&nbsp;回复&nbsp;&nbsp;{{reply.reviewers}}<span style="margin-left:20px;font-size:15px;color:grey"><cite>—{{reply.time}}</cite></span></b>\
+						<p @click="changeCommenter(reply.responder,index)"">{{reply.content}}</p>\
+					</div>\
+				</div>\
+			</div>\
+		</div>\
+	</div>',
+	props: ['comment'],
+	methods: {
+		changeCommenter: function(name,index) {
+			this.$emit("change",name,index);
+		}
+	}
+});
+
+Vue.component('commentTextarea',{
+	template:'\
+	<div class="commentBox">\
+		<h3>发表评论</h3>\
+		<b v-if="type">你回复&nbsp;{{name}}</b>\
+		<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="" value="请填写评论内容" v-model="commentText"></textarea>\
+		<button type="button" class="btn btn-dark" @click="canelComment" style="margin-top:15px;float:right;margin-right:30px;">取消</button>\
+		<button type="button" class="btn btn-dark" @click="addComment" style="margin-top:15px;float:right;margin-right:30px;">发表</button>\
+	</div>',
+	props: ['type','name'],
+	data: function(){
+		return {commentText:""}
+	},
+	methods: {
+		addComment: function() {
+			this.$emit("submit",this.commentText);
+			this.commentText = "";
+		},
+		canelComment: function() {
+			this.$emit("canel");
+			this.commentText = "";
+		}
+	}
+});
+
+var comment = new Vue({
+	el: "#comment",
+	data: {
+		commenter: "react",   //评论人
+		type: 0,                //0为评论作者1为评论别人的评论2为评论别人的别人
+		oldComment: null,
+		chosedIndex: -1,        //被选中的评论的index
+		article: {
+			title: "《头号玩家》，到底值不值得看？",
+			time: "2018-03-03",
+			read:50,
+			content: "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;随着在电影口碑的一路升高，豆瓣9.2的极高评分，《头号玩家》正在掀起一股新的观影狂潮，甚至有人将这次的影迷膜拜直接勾连到九年前的《阿凡达》。这部电影开创了好莱坞电影新纪元。</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在人人沉溺于VR游戏的未来，“绿洲”作为包罗万象、同时几乎以虚拟力量主宰了现实世界的游戏产品，引发各路豪杰化身游戏中的人物，展开寻宝行动。主人公韦德与他游戏中的小伙伴投入了寻找游戏创始人遗留彩蛋的行动，这一过程中遭到公司掌门人诺兰的围追堵截。这可能是阅片无数的你我再熟悉不过的科幻片情节，围绕着一个亟待解决的任务展开，正邪对抗，邪不压正。不可否认影片的基本叙事塑形就是这样，但其内核与表象都远远超过了这些。</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以真实虚拟世界结合作为游戏基础并衍伸出对未来世界的科技想象，在今天已经不太稀奇，稀奇的是导演斯皮尔伯格将这场冒险的俗套部分玩出了各种期待之中又意料之外的花样。出现在游戏中的各种形象与场景，基本是既往流行文化与电子游戏发展史的缩影。作为游戏盲，我对后者这一点的了解几乎全部通过观看后的资料查询。在片中出现大大小小彩蛋已经被总结超过了两百多个。</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如此堪称瀚如烟海的互文本，令人眼花缭乱之余，本身也体现出影片极力打造的绝无冷场的感官体验，这种感官体验不仅来自特效，而是来自观众自身对于既定的娱乐回忆经验的一再被调用。“绿洲”游戏最大的特点是一种类似开源的开放性，可以令玩家自由穿梭于各种出现于脑内的场景，同时亦可制造无限逼近现实的假象，韦德假造了一个办公室，迷惑诺兰，取得了主动权。这种开放性可令现实中无所依归的众生，具备飞天遁地的权利，然而其纯粹的初始属性早已经被诺兰代表的现代资本包围。</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;游戏中出现的各类道具增强了玩家的胜负波动几率，关键时刻拯救了绝望的危局，可以说是一个极大的悖论。</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;在上世纪八十、九十年代炮制或监制的《E.T》、《回到未来》、《侏罗纪公园》及本世纪的《丁丁历险记》等，彰显这位年过古稀的传奇导演辉煌的经验，在《头号玩家》里从八十年代流行音乐到极富层次的运动长镜头，都不断引人回到过去。</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;最绝妙的桥段莫过于对于库布里克1980年拍摄的恐怖经典《闪灵》中重要场景的全面再现，与改写（《闪灵》同为华纳出品）。在相对不那么经典的当代，小分队成员们穿越进古早的电影院，于幽闭旅馆里与当年的故事线索激烈碰撞，能够教骨灰级影迷都潸然泪下。</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;哈利迪的饰演者马克·里朗斯无需赘言，是近年来斯氏作品中经常出现的熟面戏骨，气定神闲是形容他此番在片中表演的最好词汇。他在片中饰演绿洲的创始人，通过让一众游戏玩家寻找彩蛋，讲述了友情、爱情以及人生的信条，并告诫我们现实世界永远比虚拟世界重要。《头号玩家》表面是正邪的对抗，骨子里都是温情泪意。看完这篇文章，你是不是也觉得《头号玩家》不容错过？</p>",
+		},
+		comment: [
+			{
+				name: "flask",
+				time: "2018-03-30",
+				content: "好,讲得非常好，good",
+				reply: [
+					{
+						responder: "flask",
+						reviewers: "vue",
+						time: "2018-04-19",
+						content: "你说得对"
+					},
+					{
+						responder: "vue",
+						reviewers: "flask",
+						time: "2018-04-19",
+						content: "很强"
+					}
+				]
+			},
+			{
+				name: "jQuery",
+				time: "2018-04-30",
+				content: "好,讲得非常好，good",
+				reply: []
+			}
+		]
+	},
+	methods: {
+		addComment: function(data) {
+			if(this.type == 0) {
+				this.comment.push({
+					name: 'react',
+					time: getTime(),
+					content: data,
+					reply: []
+				});
+				//服务器端变
+			}else if(this.type == 1){
+				this.comment[this.chosedIndex].reply.push({
+					responder: 'react',
+					reviewers:this.comment[this.chosedIndex].name,
+					time: getTime(),
+					content: data
+				});
+				this.type = 0;
+			}
+		},
+		changCommmer: function(name,index) {
+			this.oldComment = name;
+			this.chosedIndex = index;
+			this.type = 1;
+		},
+		canelCommit: function() {
+			this.type = 0;
+		}
+	}
+})
+
+
+//格式化时间
+function getTime() {
+	var now = new Date();
+	var year = now.getFullYear();
+	var month = now.getMonth()+1;
+	var day = now.getDate();
+	month.length < 2 ?  "0" + month : month;
+	day.length < 2 ?  "0" + day : day;
+	return year+"-"+month+"-"+day;
+}
+</script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+</body>
+</html>

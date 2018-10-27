@@ -1,0 +1,407 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script type="text/javascript" src="js/jquery-1.2.3.min.js"></script>
+    <title>剧情简介</title>
+	<style>
+	body{
+		background-color:black;
+		overflow:hidden;
+		font-family: Helvetica, Arial, sans-serif;
+	}
+	.ghost{
+		width:80px;
+		height:200px;
+		margin:100px auto;
+		position:absolute;
+		left:100px;
+		top:80px;
+		animation:ghostUpdown 1s infinite alternate;
+		-webkit-animation:ghostUpdown 1s infinite alternate;
+	}
+	#ghostBody{
+		width:70px;
+		height:90px;
+		background:#fff;
+		border-radius:100% 100% 0 0;
+		position:relative;
+	}
+	#ghostEye_left{
+		width:15px;
+		height:20px;
+		border-radius:100%;
+		border:2px solid #061E74;
+		background:#061E74;
+		box-shadow:inset -2px -2px #fff;
+		position:absolute;
+		top:30px;
+		left:15px;
+	}
+	#ghostEye_right{
+		width:15px;
+		height:20px;
+		border-radius:100%;
+		border:2px solid #061E74;
+		background:#061E74;
+		box-shadow:inset -2px -2px #fff;
+		position:absolute;
+		top:30px;
+		left:50px;
+	}
+	#ghostMouth{
+		width:15px;
+		height:20px;
+		border-radius:100%;
+		border:2px solid #061E74;
+		position:absolute;
+		top:60px;
+		left:45px;
+	}
+	#ghostWave{
+		position:absolute;
+		width: 70px;
+		height: 10px;
+		background-size:12px 10px;
+		background-image:radial-gradient(circle at 50% 0%,#fff,71%,transparent 71%);
+	}
+	#shadow{
+		width:70px;
+		height:5px;
+		border-radius:100%;
+		background:#061E74;
+		opacity:0.3;
+		margin-top:35px;
+		animation:shadow 1s infinite alternate;
+		-webkit-animation:shadow 1s infinite alternate;
+	}
+	@keyframes ghostUpdown{
+		from{margin-top:50px;}
+		to{margin-top:25px;}
+	}
+	@-webkit-keyframes ghostUpdown{
+		from{margin-top:50px;}
+		to{margin-top:25px;}
+	}
+	@keyframes shadow{
+		from{margin-top:25px;opacity:0.3;}
+		to{margin-top:50px;opacity:0.1;}
+	}
+	@-webkit-keyframes shadow{
+		from{margin-top:25px;opacity:0.3;}
+		to{margin-top:50px;opacity:0.1;}
+	}
+#introduce_logo {
+	margin: 0;
+	padding: 0;
+	text-indent: -9999px;
+	width: 400px;
+	height: 225px;
+	position: relative;
+	background: url(images/introduce_logo.jpg) no-repeat;
+	background-size:100%;
+}
+#introduce_logo a {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 400px;
+	height: 225px;
+	display: block;
+	border: 0;
+	background: transparent;
+	overflow: hidden;
+}
+#introduce_logo:hover{
+	margin: 0;
+	padding: 0;
+	width: 400px;
+	height: 225px;
+    position:relative;
+	background: url(images/introduce_logox.jpg) no-repeat;
+	background-size:100%;
+}
+	</style>
+<script type="text/javascript">
+//<![CDATA[
+
+var Header = {
+	// Let's write in JSON to make it more modular
+	addFade : function(selector){
+		$("<span class=\"fake-hover\"></span>").css("display", "none").prependTo($(selector)); 
+		// Safari dislikes hide() for some reason
+		$(selector+" a").bind("mouseenter",function(){
+			$(selector+" .fake-hover").fadeIn("slow");
+		});
+		$(selector+" a").bind("mouseleave",function(){
+			$(selector+" .fake-hover").fadeOut("slow");
+		});
+		
+	}
+};
+
+$(function(){
+	Header.addFade("#introduce_logo");
+});
+
+//]]>
+//]]>
+</script>
+	<script>
+function cookie(name, value, options)
+{
+    if (typeof value != 'undefined')
+    {
+        options = options ||{};
+        if (value === null)
+        {
+            value = '';
+            options.expires = - 1;
+        }
+        var expires = '';
+        if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString))
+        {
+            var date;
+            if (typeof options.expires == 'number')
+            {
+                date = new Date();
+                date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
+            }
+            else
+            {
+                date = options.expires;
+            }
+            expires = '; expires=' + date.toUTCString();
+        }
+        var path = options.path ? '; path=' + options.path : '';
+        var domain = options.domain ? '; domain=' + options.domain : '';
+        var secure = options.secure ? '; secure' : '';
+        document.cookie = [name,'=',encodeURIComponent(value),expires,path,domain,secure].join('');
+    }
+    else
+    {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '')
+        {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i ++ )
+            {
+                var cookie = (cookies[i] || "").replace( /^\s+|\s+$/g, "" );
+                if (cookie.substring(0, name.length + 1) == (name + '='))
+                {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+};
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="index.html"><img src="images/index_logo.jpg" style="width:150px;height:70px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="introduce.html">剧情简介<span class="sr-only">(current)</span></a>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          角色介绍
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="character.html"><img src="images/帕西瓦尔.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;帕西瓦尔</a>
+          <a class="dropdown-item" href="character.html"><img src="images/阿尔忒密斯.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;阿尔忒密斯</a>
+          <a class="dropdown-item" href="character.html"><img src="images/艾奇.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;艾奇</a>
+          <a class="dropdown-item" href="character.html"><img src="images/大东.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;大东</a>
+          <a class="dropdown-item" href="character.html"><img src="images/修.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;修</a>
+          <a class="dropdown-item" href="character.html"><img src="images/阿诺克.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;阿诺克</a>
+		  <a class="dropdown-item" href="character.html"><img src="images/索伦托.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;索伦托</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          阿诺克的三把钥匙
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#"><img src="images/古铜之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;古铜之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          <a class="dropdown-item" href="#"><img src="images/翡翠之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;翡翠之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+		  <a class="dropdown-item" href="#"><img src="images/水晶之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;水晶之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="discussing.html">讨论区</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          小游戏
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="game.html">超级玛丽</a>
+		  <a class="dropdown-item" href="gobang.html">Gobang</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          纪念品商店
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="shopping.html">Fassial的小店</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">敬请期待</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+	<ul class="navbar-nav mr-auto" id="fassial">
+	  <li class="nav-item dropdown" v-if="show_one">
+        <a class="nav-link" href="#" @click="Log_In">Log In</a>
+      </li>
+	  <li class="nav-item dropdown" v-if="show_two">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/react.png" width="40px" height="40px" style="border-radius:100%;margin-right:15px;">{{z}}</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#" @click="Log_Out">Log Out</a>
+		  <a class="dropdown-item" href="#" @click="ReLog_In">ReLog In</a>
+        </div>
+      </li>
+	</ul>
+  </div>
+</nav>
+
+	<script src="http://unpkg.com/vue/dist/vue.min.js"></script>
+
+    
+    <div class="ghost">
+		<div id="ghostBody"></div>
+		<div id="ghostEye_left"></div>
+		<div id="ghostEye_right"></div>
+		<div id="ghostMouth"></div>
+		<div id="ghostWave"></div>
+		<div id="shadow"></div>
+	</div>
+	<script>
+		var oBox = document.getElementById('ghostMouth');
+		oBox.onmousedown = function(e){
+			var oEvent =e || window.event,
+				disL = oEvent.clientX - oBox.offsetLeft,
+				disT = oEvent.clientY - oBox.offsetTop,
+				maxL = document.documentElement.clientWidth - oBox.offsetWidth,
+				maxT = document.documentElement.clientHeight - oBox.offsetHeight;
+			document.onmousemove = function(e){
+				var oEvent = e || window.event,
+					disX = oEvent.clientX - disL,
+					disY = oEvent.clientY - disT;
+				if(disX <= 0){ disX = 0}
+				if(disY <= 0){ disY = 0}
+				if(disX >= maxL){ disX = maxL}
+				if(disY >= maxT){ disY = maxT}
+				oBox.style.left = disX + 'px';
+				oBox.style.top = disY + 'px';
+			}
+		}
+		document.onmouseup = function(){
+			document.onmousemove = null;
+		}
+		
+
+        			var x,y,z;
+			if(!cookie("NAME")){
+			    x=true;
+				y=false;
+			} else {
+			    x=false;
+				y=true;
+				z=cookie("NAME");
+			}
+			
+			var fassial=new Vue({
+			    el:'#fassial',
+				data:{
+				    show_one:x,
+					show_two:y,
+					name:z,
+				},
+				methods:{
+				    Log_In:function(){
+					    if(!cookie("NAME")){
+						    var _name=prompt("请输入你的名字：");
+							cookie("NAME",_name,{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+					ReLog_In:function(){
+					    if(cookie("NAME")){
+						    var _name=prompt("请输入你的新名字：");
+							cookie("NAME",null);
+							cookie("NAME",_name,{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+					Log_Out:function(){
+					    if(cookie("NAME")){
+							cookie("NAME",null);
+							cookie("NAME","",{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+				}
+			})
+	</script>
+	<div style="position:absolute;top:150px;left:240px;color:white;">
+	    <h2>剧&nbsp;&nbsp;&nbsp;&nbsp;情&nbsp;&nbsp;&nbsp;&nbsp;简&nbsp;&nbsp;&nbsp;&nbsp;介</h2>
+	</div>
+    <div class="embed-responsive embed-responsive-16by9" style="position:absolute;top:250px;left:100px;">
+		<video controls="controls" style="width:516px;height:300px;" class="embed-responsive-item">
+            <source src="images/introduce_foreshow.mp4" type="video/mp4"/>
+        </video>
+    </div>
+	<div style="width:400px;height:400pc;position:absolute;top:100px;left:800px;">
+		<h1 id="introduce_logo"><a href="#">头号玩家</a></h1>
+		<p style="color:white;">
+		<i>2045年，处于混乱和崩溃边缘的现实世界令人失望，人们将救赎的希望寄托于“绿洲”，
+		一个由鬼才詹姆斯·哈利迪（马克·里朗斯 饰）一手打造的虚拟游戏宇宙。
+		人们只要戴上VR设备，就可以进入这个与现实形成强烈反差的虚拟世界。
+		<br><br><br><br>如果你处在这个世界中，你会甘于现实？还是征战未来？
+		</i>
+		</p>
+	</div>
+
+	
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,599 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+	
+    <title>纪念品商店</title>
+    <style type="text/css">
+        body{
+            padding:0;
+            margin: 0;
+            box-sizing: border-box;
+            font-size: 16px;
+            overflow:hidden;
+        }
+		
+		a {
+		    text-decoration: none;
+			color: #333;
+		}
+		
+		.clearfix:after {
+            content: ".";
+			visibility: hidden;
+			display: block;
+			height: .1px;
+			font-size: .1em;
+			line-height: 0;
+			clear: both;
+		}
+		
+		.quantity-selector {
+            margin: 0 auto;
+			width: 8.571rem;
+			line-height: 30px;
+			border: 1px solid #d1d6e4;
+			border-radius: 3px;
+		}
+		
+		.quantity-selector .reduce, .quantity-selector .add {
+            float: left;
+			width: 33.33%;
+			border-right: 1px solid #d1d6e4;
+			text-align: center;
+			cursor: pointer;
+		}
+		
+		.quantity-selector .number {
+		    float: left;
+			width: 33.33%;
+			height: 30px;
+			border: none;
+			padding-left: 10px;
+			text-align: center;
+		}
+		
+		.quantity-selector .add {
+    		border-left: 1px solid #d1d6e4;
+			border-right: none;
+		}
+
+		.quantity-selector .disable {
+    		color: #d2d2d2;
+			cursor: default;
+		}
+		
+		label {
+    		cursor: pointer;
+		}
+		
+		.choose-all {
+    		margin-left: 20px;
+		}
+ 
+        .store-item {
+    		width:100%;
+			margin: 30px ;
+		}
+		
+		.store-item th {
+	    	height: 40px;
+			background: #d2d2d2;
+			-webkit-text-stroke: 1px #ff7500;
+			font-size: 18px;
+		}
+		
+		.store-item td {
+    		height: 60px;
+			text-align: center;
+		}
+	
+    </style>
+		<script>
+function cookie(name, value, options)
+{
+    if (typeof value != 'undefined')
+    {
+        options = options ||{};
+        if (value === null)
+        {
+            value = '';
+            options.expires = - 1;
+        }
+        var expires = '';
+        if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString))
+        {
+            var date;
+            if (typeof options.expires == 'number')
+            {
+                date = new Date();
+                date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
+            }
+            else
+            {
+                date = options.expires;
+            }
+            expires = '; expires=' + date.toUTCString();
+        }
+        var path = options.path ? '; path=' + options.path : '';
+        var domain = options.domain ? '; domain=' + options.domain : '';
+        var secure = options.secure ? '; secure' : '';
+        document.cookie = [name,'=',encodeURIComponent(value),expires,path,domain,secure].join('');
+    }
+    else
+    {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '')
+        {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i ++ )
+            {
+                var cookie = (cookies[i] || "").replace( /^\s+|\s+$/g, "" );
+                if (cookie.substring(0, name.length + 1) == (name + '='))
+                {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+};
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="index.html"><img src="images/index_logo.jpg" style="width:150px;height:70px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="introduce.html">剧情简介<span class="sr-only">(current)</span></a>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          角色介绍
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="character.html"><img src="images/帕西瓦尔.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;帕西瓦尔</a>
+          <a class="dropdown-item" href="character.html"><img src="images/阿尔忒密斯.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;阿尔忒密斯</a>
+          <a class="dropdown-item" href="character.html"><img src="images/艾奇.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;艾奇</a>
+          <a class="dropdown-item" href="character.html"><img src="images/大东.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;大东</a>
+          <a class="dropdown-item" href="character.html"><img src="images/修.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;修</a>
+          <a class="dropdown-item" href="character.html"><img src="images/阿诺克.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;阿诺克</a>
+		  <a class="dropdown-item" href="character.html"><img src="images/索伦托.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;索伦托</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          阿诺克的三把钥匙
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#"><img src="images/古铜之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;古铜之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          <a class="dropdown-item" href="#"><img src="images/翡翠之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;翡翠之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+		  <a class="dropdown-item" href="#"><img src="images/水晶之匙.png" width="40px" height="40px" style="border-radius:100%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;水晶之匙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="discussing.html">讨论区</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          小游戏
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="game.html">超级玛丽</a>
+		  <a class="dropdown-item" href="gobang.html">Gobang</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          纪念品商店
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="shopping.html">Fassial的小店</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">敬请期待</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+	<ul class="navbar-nav mr-auto" id="fassial">
+	  <li class="nav-item dropdown" v-if="show_one">
+        <a class="nav-link" href="#" @click="Log_In">Log In</a>
+      </li>
+	  <li class="nav-item dropdown" v-if="show_two">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/react.png" width="40px" height="40px" style="border-radius:100%;margin-right:15px;">{{z}}</a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#" @click="Log_Out">Log Out</a>
+		  <a class="dropdown-item" href="#" @click="ReLog_In">ReLog In</a>
+        </div>
+      </li>
+	</ul>
+  </div>
+</nav>
+
+	<script src="http://unpkg.com/vue/dist/vue.min.js"></script>
+		<script>			
+			var x,y,z;
+			if(!cookie("NAME")){
+			    x=true;
+				y=false;
+			} else {
+			    x=false;
+				y=true;
+				z=cookie("NAME");
+			}
+			
+			var fassial=new Vue({
+			    el:'#fassial',
+				data:{
+				    show_one:x,
+					show_two:y,
+					name:z,
+				},
+				methods:{
+				    Log_In:function(){
+					    if(!cookie("NAME")){
+						    var _name=prompt("请输入你的名字：");
+							cookie("NAME",_name,{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+					ReLog_In:function(){
+					    if(cookie("NAME")){
+						    var _name=prompt("请输入你的新名字：");
+							cookie("NAME",null);
+							cookie("NAME",_name,{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+					Log_Out:function(){
+					    if(cookie("NAME")){
+							cookie("NAME",null);
+							cookie("NAME","",{expires:30,path:"/"});
+							location.reload();
+						} else {
+						    location.reload();
+						}
+				    },
+				}
+			})
+		</script>
+    
+
+
+<div class="store-item" v-for="(index1, item) in goodsObj"> 
+  <p>
+    <span v-html="item.name"></span>
+    <label class="choose-all">
+      <input type="checkbox" name="all" v-on:click="chooseShopGoods(index1)" v-model="item.checked" />
+      <span>全选</span>
+    </label>
+  </p>
+  <div class="card" style="width:240px;position:relative;float:left;margin:-10px 20px;padding-bottom:0px;"  v-for="(index, data) in item.list">
+      <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner" style="height:250px;">
+              <div class="carousel-item active">
+                  <img class="d-block w-100" :src="data.url1" alt="First slide">
+              </div>
+              <div class="carousel-item">
+                   <img class="d-block w-100" :src="data.url2" alt="Second slide">
+              </div>
+              <div class="carousel-item">
+                   <img class="d-block w-100" :src="data.url3" alt="Third slide">
+              </div>
+			  <div class="carousel-item">
+                   <img class="d-block w-100" :src="data.url4" alt="Forth slide">
+              </div>
+          </div>
+      </div>
+      <div class="card-body">
+          <h3 class="card-title" style="padding:0;margin:0;"><span v-html="data.name"></span></h3>
+		  选择：<input type="checkbox" name="all" v-model="data.checked" v-on:click="choose(index1, index)" />
+          <p class="card-text" style="padding:0;margin:0;">单价：<span  v-html="(data.price).toFixed(2)"></span></p>
+		  <p class="card-text" style="padding:0;margin:0;">运费：<span  v-html="(data.fare).toFixed(2)"></span></p>
+		  <p class="card-text quantity-selector clearfix" style="padding:0;margin-top:5px;">
+		      <span class="reduce" v-on:click="numChange(index1, $index, -1)" v-bind:class="{ 'disable' : data.num==1 }">－</span>
+              <input type="number" v-bind:value="data.num" class="number" v-bind:data-realStock="data.realStock" v-on:keyUp="numEntry(index1, $index)" v-on:keyDown="numEntry(index1, $index)" v-model="data.num"/>
+              <span class="add" v-on:click="numChange(index1, $index, 1)" v-bind:class="{ 'disable' : data.num==data.realStock }">＋</span>
+		  </p>
+          <a class="btn btn-primary" style="margin-left:70px;margin-top:15px;" href="javascript:;" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" rel="external nofollow" v-on:click="delGoods(index1, index)">删除</a>
+      </div>
+  </div>
+
+  <div>
+    <p>店铺总运费: <span v-html="calEveryFare(index1)"></span></p>
+    <p>店铺商品总金额: <span v-html="calEveryStore(index1)"></span></p>
+  </div>
+</div>
+ 
+    <script src="http://cdn.bootcss.com/vue/1.0.7/vue.js"></script>
+<script>
+var goodsObj = [
+  {
+    name : 'Fassial走私来的商品们',
+    checked : false,
+    list : [
+      {
+        name : 'shirt',
+        price : 23.00,
+        realStock : 10,
+        fare : 1.5,
+        num : 1,
+        checked : false,
+		url1:'images/shirt1.jpg',
+		url2:'images/shirt2.jpg',
+		url3:'images/shirt3.jpg',
+		url4:'images/shirt4.jpg',
+      },
+ 
+      {
+        name : 'VR',
+        price : 21.00,
+        realStock : 2,
+        fare : 1.5,
+        num : 2,
+        checked : false,
+		url1:'images/VR1.jpg',
+		url2:'images/VR2.jpg',
+		url3:'images/VR3.jpg',
+		url4:'images/VR4.jpg',
+      },
+      
+	  {
+        name : '高达',
+        price : 21.00,
+        realStock : 2,
+        fare : 1.5,
+        num : 2,
+        checked : false,
+		url1:'images/高达1.jpg',
+		url2:'images/高达2.jpg',
+		url3:'images/高达3.jpg',
+		url4:'images/高达4.jpg',
+      },
+	  
+      {
+        name : '纪念册',
+        price : 88.00,
+        realStock : 8,
+        fare : 1.5,
+        num : 4,
+        checked : false,
+		url1:'images/纪念册1.jpg',
+		url2:'images/纪念册2.jpg',
+		url3:'images/纪念册3.jpg',
+		url4:'images/纪念册4.jpg',
+      }
+    ]
+  },
+ 
+  
+];
+var vue = new Vue({
+  el : 'body',
+  data : {
+    goodsObj : goodsObj,
+    totalMoney : 0,
+    totalFare : 0,
+    allChecked : false
+  },
+  ready : function() {},
+  methods : {
+ 
+    // 全部商品全选
+    chooseAllGoods : function() {
+      var flag = true;
+      if ( this.allChecked ) {
+        flag = false;
+      }
+      for ( var i = 0, len = this.goodsObj.length; i < len; i++ ) {
+        this.goodsObj[i]['checked'] = flag;
+        var list = this.goodsObj[i]['list'];
+        for ( var k = 0, len1 = list.length; k < len1; k++ ) {
+          list[k]['checked'] = flag;
+        }
+      }
+      this.allChecked = !this.allChecked;
+      this.calTotalMoney();
+      this.calTotalFare();
+    },
+ 
+    // 每个店铺全选
+    chooseShopGoods : function( index) {
+      var list = this.goodsObj[index]['list'],
+        len = list.length;
+      if ( this.goodsObj[index]['checked'] ) {
+        for (var i = 0; i < len; i++ ) {
+          list[i]['checked'] = false;
+        }
+      } else {
+        for (var i = 0; i < len; i++ ) {
+          list[i]['checked'] = true;
+        }
+      }
+      this.goodsObj[index]['checked'] = !this.goodsObj[index]['checked'];
+ 
+      // 判断是否选择所有商品的全选
+      this.isChooseAll();
+ 
+      this.cal(index);
+    },
+ 
+    // 单个选择
+    choose : function( index1, index) {
+      var list = this.goodsObj[index1]['list'],
+        len = list.length;
+      if ( list[index]['checked'] ) {
+        this.goodsObj[index1]['checked'] = false;
+        this.allChecked = false;
+        list[index]['checked'] = !list[index]['checked'];
+      } else {
+        list[index]['checked'] = !list[index]['checked'];
+ 
+        // 判断是否选择当前店铺的全选
+        var flag = true;
+        for (var i = 0; i < len; i++ ) {
+          if ( list[i]['checked'] == false ) {
+            flag = false;
+            break;
+          }
+        }
+        flag == true ? this.goodsObj[index1]['checked'] = true : this.goodsObj[index1]['checked'] = false;
+      }
+ 
+      // 判断是否选择所有商品的全选
+      this.isChooseAll();
+ 
+      this.cal(index);
+    },
+ 
+    // 判断是否选择所有商品的全选
+    isChooseAll : function() {
+      var flag1 = true;
+      for ( var i = 0, len = this.goodsObj.length; i < len; i++ ) {
+        if ( this.goodsObj[i]['checked'] == false ) {
+          flag1 = false;
+          break;
+        }
+      }
+      flag1 == true ? this.allChecked = true : this.allChecked = false;
+    },
+ 
+    // 商品数量控制
+    numChange : function(index1, index, numChange) {
+      var goods = this.goodsObj[index1]['list'][index],
+        oThis = this;
+      if ( numChange == 1 ) {
+        goods.num++;
+      } else if ( numChange == -1 ) {
+        goods.num--;
+      }
+ 
+      if ( goods.num <= 1 ) {
+        goods.num = 1;
+      } 
+ 
+      if ( goods.num >= goods.realStock ) {
+        goods.num = goods.realStock;
+      }
+ 
+      this.cal(index);
+    },
+ 
+    // 用户填写容错处理
+    numEntry : function(index1, index) {
+      var goods = this.goodsObj[index1]['list'][index];
+      if ( goods.num <=1 ) {
+        goods.num = 1;
+      }
+ 
+      if ( goods.num > goods.realStock ) {
+        goods.num = goods.realStock;
+      }
+      this.cal(index);
+    },
+ 
+    // 计算每个店铺的商品总额
+    calEveryStore : function(index) {
+      var everyStoreMoney = 0,
+        list = this.goodsObj[index]['list'];
+      list.forEach(function(item, index, arr) {
+        if ( list[index]['checked'] ) { 
+          everyStoreMoney += parseFloat(item.price) * parseFloat(item.num);
+        }
+      });
+      return everyStoreMoney.toFixed(2);
+    },
+ 
+    // 计算每个店铺的运费总额
+    calEveryFare : function(index) {
+      var everyStoreFare = 0,
+        list = this.goodsObj[index]['list'];
+      list.forEach(function(item, index, arr) {
+        if ( list[index]['checked'] ) { 
+          everyStoreFare += parseFloat(item.fare) * parseFloat(item.num);
+        }
+      });
+      return everyStoreFare.toFixed(2);
+    },
+ 
+    // 计算商品总金额
+    calTotalMoney : function () {
+      var oThis = this;
+      this.totalMoney = 0;
+      for ( var i = 0, len = this.goodsObj.length; i < len; i++ ) {
+        var list = this.goodsObj[i]['list'];
+        list.forEach(function(item, index, arr) {
+          if ( list[index]['checked'] ) {
+            oThis.totalMoney += parseFloat(item.price) * parseFloat(item.num);
+          }
+        });
+      }
+    },
+ 
+    // 计算商品总运费
+    calTotalFare : function () {
+      var oThis = this;
+      this.totalFare = 0;
+      for ( var i = 0, len = this.goodsObj.length; i < len; i++ ) {
+        var list = this.goodsObj[i]['list'];
+        list.forEach(function(item, index, arr) {
+          if ( list[index]['checked'] ) {
+            oThis.totalFare += parseFloat(item.fare) * parseFloat(item.num);
+          }
+        });
+      }
+    },
+ 
+    // 计算方法集合
+    cal : function(index) {
+      this.calEveryStore(index);
+      this.calEveryFare(index);
+      this.calTotalMoney();
+      this.calTotalFare();
+    },
+ 
+    // 删除操作
+    delGoods : function(index1, index) {
+      console.log(index1);
+      console.log(index);
+      this.goodsObj[index1]['list'].splice(index, 1);
+      this.cal(index);
+    }
+     
+  }
+})
+</script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  </body>
+</html>
